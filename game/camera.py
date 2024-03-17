@@ -16,6 +16,7 @@ class Camera:
     def __init__(self, perspective_amount: float, screen: Screen):
         self.perspective_amount = perspective_amount
         self._screen = screen
+        self._position = Point3D(0, 0, 0)
 
         self._init_mat_proj()
 
@@ -115,7 +116,11 @@ class Camera:
         for face in entity.faces:
             normal = self.get_face_normal(face)
 
-            if normal.z < 0:
+            if (
+                    normal.x * (face.edges[0].a.x - self._position.x) +
+                    normal.y * (face.edges[0].a.y - self._position.y) +
+                    normal.z * (face.edges[0].a.z - self._position.z) < 0.0
+            ):
                 color = RED
             else:
                 color = BLUE
