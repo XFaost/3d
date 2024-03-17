@@ -1,15 +1,15 @@
-from math import tan
-from typing import List
+from math import tan, sqrt
 
 import numpy
 import pygame
 
 from entity.entity import Entity
+from entity.face import Face
 from entity.point2d import Point2D
 from entity.point3d import Point3D
 from game.environment import Environment
 from game.screen import Screen
-from utils.color import RED, BLUE
+from utils.color import RED, Color, BLUE
 
 
 class Camera:
@@ -61,8 +61,7 @@ class Camera:
             self,
             a: Point3D,
             b: Point3D,
-            entities: List[Entity],
-            entity_index: int
+            color: Color
     ):
         a_2d = self.point_from_3d_to_2d(a)
         b_2d = self.point_from_3d_to_2d(b)
@@ -72,10 +71,10 @@ class Camera:
 
         pygame.draw.line(
             self._screen.get(),
-            RED.get(),
+            color.get(),
             a_screen_cords,
             b_screen_cords,
-            1
+            2
         )
 
     def render_environment(
@@ -84,16 +83,46 @@ class Camera:
     ):
         self._screen.fill(environment.bg_color)
 
+    def get_face_normal(self, face: Face):
+        line1 = Point3D(
+            face.edges[0].b.x - face.edges[0].a.x,
+            face.edges[0].b.y - face.edges[0].a.y,
+            face.edges[0].b.z - face.edges[0].a.z,
+        )
+        line2 = Point3D(
+            face.edges[-1].a.x - face.edges[-1].b.x,
+            face.edges[-1].a.y - face.edges[-1].b.y,
+            face.edges[-1].a.z - face.edges[-1].b.z,
+        )
+        normal = Point3D(
+            line1.y * line2.z - line1.z * line2.y,
+            line1.z * line2.x - line1.x * line2.z,
+            line1.x * line2.y - line1.y * line2.x
+        )
+
+        # It's normally normal to normalise the normal
+        l = sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z)
+        normal.x /= l
+        normal.y /= l
+        normal.z /= l
+
+        return normal
+
     def render_3d_entity(
             self,
-            entities: List[Entity],
-            index: int
+            entity: Entity
     ):
-        for face in entities[index].faces:
+        for face in entity.faces:
+            normal = self.get_face_normal(face)
+
+            if normal.z < 0:
+                color = RED
+            else:
+                color = BLUE
+
             for edge in face.edges:
                 self.render_line(
                     edge.a,
                     edge.b,
-                    entities,
-                    index
+                    color
                 )

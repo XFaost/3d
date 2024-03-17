@@ -29,7 +29,7 @@ class Game:
                 self._environment
             )
 
-            for i in range(len(self._entities)):
-                self._camera.render_3d_entity(self._entities, i)
+            for entity in self._entities:
+                self._camera.render_3d_entity(entity)
 
             self._screen.update()
