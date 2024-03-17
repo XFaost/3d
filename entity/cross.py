@@ -8,18 +8,18 @@ from utils.color import Color
 
 class Cross(Entity):
     def front_face(self):
-        p0 = self.shift_point(-1.0, 0.0, 1.0)
-        p1 = self.shift_point(-1.0, 5.0, 1.0)
-        p2 = self.shift_point(-3.0, 5.0, 1.0)
-        p3 = self.shift_point(-3.0, 7.0, 1.0)
-        p4 = self.shift_point(-1.0, 7.0, 1.0)
-        p5 = self.shift_point(-1.0, 9.0, 1.0)
-        p6 = self.shift_point(1.0, 9.0, 1.0)
-        p7 = self.shift_point(1.0, 7.0, 1.0)
-        p8 = self.shift_point(3.0, 7.0, 1.0)
-        p9 = self.shift_point(3.0, 5.0, 1.0)
-        p10 = self.shift_point(1.0, 5.0, 1.0)
-        p11 = self.shift_point(1.0, 0.0, 1.0)
+        p0 = self.shift_point(1.0, 0.0, 0.0)
+        p1 = self.shift_point(1.0, 1.0, 0.0)
+        p2 = self.shift_point(0.0, 1.0, 0.0)
+        p3 = self.shift_point(0.0, 2.0, 0.0)
+        p4 = self.shift_point(1.0, 2.0, 0.0)
+        p5 = self.shift_point(1.0, 4.0, 0.0)
+        p6 = self.shift_point(2.0, 4.0, 0.0)
+        p7 = self.shift_point(2.0, 2.0, 0.0)
+        p8 = self.shift_point(3.0, 2.0, 0.0)
+        p9 = self.shift_point(3.0, 1.0, 0.0)
+        p10 = self.shift_point(2.0, 1.0, 0.0)
+        p11 = self.shift_point(2.0, 0.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -37,18 +37,18 @@ class Cross(Entity):
         ])
 
     def back_face(self):
-        p0 = self.shift_point(-1.0, 0.0, -1.0)
-        p1 = self.shift_point(1.0, 0.0, -1.0)
-        p2 = self.shift_point(1.0, 5.0, -1.0)
-        p3 = self.shift_point(3.0, 5.0, -1.0)
-        p4 = self.shift_point(3.0, 7.0, -1.0)
-        p5 = self.shift_point(1.0, 7.0, -1.0)
-        p6 = self.shift_point(1.0, 9.0, -1.0)
-        p7 = self.shift_point(-1.0, 9.0, -1.0)
-        p8 = self.shift_point(-1.0, 7.0, -1.0)
-        p9 = self.shift_point(-3.0, 7.0, -1.0)
-        p10 = self.shift_point(-3.0, 5.0, -1.0)
-        p11 = self.shift_point(-1.0, 5.0, -1.0)
+        p0 = self.shift_point(2.0, 0.0, 1.0)
+        p1 = self.shift_point(2.0, 1.0, 1.0)
+        p2 = self.shift_point(3.0, 1.0, 1.0)
+        p3 = self.shift_point(3.0, 2.0, 1.0)
+        p4 = self.shift_point(2.0, 2.0, 1.0)
+        p5 = self.shift_point(2.0, 4.0, 1.0)
+        p6 = self.shift_point(1.0, 4.0, 1.0)
+        p7 = self.shift_point(1.0, 2.0, 1.0)
+        p8 = self.shift_point(0.0, 2.0, 1.0)
+        p9 = self.shift_point(0.0, 1.0, 1.0)
+        p10 = self.shift_point(1.0, 1.0, 1.0)
+        p11 = self.shift_point(1.0, 0.0, 1.0)
 
         return Face([
             Edge(p0, p1),
@@ -66,10 +66,10 @@ class Cross(Entity):
         ])
 
     def left_face(self):
-        p0 = self.shift_point(-3.0, 5.0, -1.0)
-        p1 = self.shift_point(-3.0, 7.0, -1.0)
-        p2 = self.shift_point(-3.0, 7.0, 1.0)
-        p3 = self.shift_point(-3.0, 5.0, 1.0)
+        p0 = self.shift_point(0.0, 1.0, 1.0)
+        p1 = self.shift_point(0.0, 2.0, 1.0)
+        p2 = self.shift_point(0.0, 2.0, 0.0)
+        p3 = self.shift_point(0.0, 1.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -79,10 +79,10 @@ class Cross(Entity):
         ])
 
     def right_face(self):
-        p0 = self.shift_point(3.0, 5.0, -1.0)
-        p3 = self.shift_point(3.0, 5.0, 1.0)
-        p2 = self.shift_point(3.0, 7.0, 1.0)
-        p1 = self.shift_point(3.0, 7.0, -1.0)
+        p0 = self.shift_point(3.0, 1.0, 0.0)
+        p1 = self.shift_point(3.0, 2.0, 0.0)
+        p2 = self.shift_point(3.0, 2.0, 1.0)
+        p3 = self.shift_point(3.0, 1.0, 1.0)
 
         return Face([
             Edge(p0, p1),
@@ -92,10 +92,10 @@ class Cross(Entity):
         ])
 
     def top_face(self):
-        p0 = self.shift_point(-1.0, 9.0, 1.0)
-        p1 = self.shift_point(-1.0, 9.0, -1.0)
-        p2 = self.shift_point(1.0, 9.0, -1.0)
-        p3 = self.shift_point(1.0, 9.0, 1.0)
+        p0 = self.shift_point(1.0, 0.0, 0.0)
+        p1 = self.shift_point(2.0, 0.0, 0.0)
+        p2 = self.shift_point(2.0, 0.0, 1.0)
+        p3 = self.shift_point(1.0, 0.0, 1.0)
 
         return Face([
             Edge(p0, p1),
@@ -105,10 +105,10 @@ class Cross(Entity):
         ])
 
     def bottom_face(self):
-        p0 = self.shift_point(-1.0, 0.0, 1.0)
-        p1 = self.shift_point(1.0, 0.0, 1.0)
-        p2 = self.shift_point(1.0, 0.0, -1.0)
-        p3 = self.shift_point(-1.0, 0.0, -1.0)
+        p0 = self.shift_point(1.0, 4.0, 1.0)
+        p1 = self.shift_point(2.0, 4.0, 1.0)
+        p2 = self.shift_point(2.0, 4.0, 0.0)
+        p3 = self.shift_point(1.0, 4.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -118,10 +118,10 @@ class Cross(Entity):
         ])
 
     def left_top_face(self):  # самий низ
-        p0 = self.shift_point(-3.0, 7.0, 1.0)
-        p1 = self.shift_point(-3.0, 7.0, -1.0)
-        p2 = self.shift_point(-1.0, 7.0, -1.0)
-        p3 = self.shift_point(-1.0, 7.0, 1.0)
+        p0 = self.shift_point(0.0, 1.0, 0.0)
+        p1 = self.shift_point(1.0, 1.0, 0.0)
+        p2 = self.shift_point(1.0, 1.0, 1.0)
+        p3 = self.shift_point(0.0, 1.0, 1.0)
 
         return Face([
             Edge(p0, p1),
@@ -131,10 +131,10 @@ class Cross(Entity):
         ])
 
     def right_top_face(self):  # самий низ
-        p0 = self.shift_point(1.0, 7.0, 1.0)
-        p1 = self.shift_point(1.0, 7.0, -1.0)
-        p2 = self.shift_point(3.0, 7.0, -1.0)
-        p3 = self.shift_point(3.0, 7.0, 1.0)
+        p0 = self.shift_point(2.0, 1.0, 0.0)
+        p1 = self.shift_point(3.0, 1.0, 0.0)
+        p2 = self.shift_point(3.0, 1.0, 1.0)
+        p3 = self.shift_point(2.0, 1.0, 1.0)
 
         return Face([
             Edge(p0, p1),
@@ -144,10 +144,10 @@ class Cross(Entity):
         ])
 
     def left_bottom_face(self):  # самий низ
-        p0 = self.shift_point(-3.0, 5.0, -1.0)
-        p1 = self.shift_point(-3.0, 5.0, 1.0)
-        p2 = self.shift_point(-1.0, 5.0, 1.0)
-        p3 = self.shift_point(-1.0, 5.0, -1.0)
+        p0 = self.shift_point(0.0, 2.0, 1.0)
+        p1 = self.shift_point(1.0, 2.0, 1.0)
+        p2 = self.shift_point(1.0, 2.0, 0.0)
+        p3 = self.shift_point(0.0, 2.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -157,10 +157,10 @@ class Cross(Entity):
         ])
 
     def right_bottom_face(self):  # самий низ
-        p0 = self.shift_point(1.0, 5.0, -1.0)
-        p1 = self.shift_point(1.0, 5.0, 1.0)
-        p2 = self.shift_point(3.0, 5.0, 1.0)
-        p3 = self.shift_point(3.0, 5.0, -1.0)
+        p0 = self.shift_point(2.0, 2.0, 1.0)
+        p1 = self.shift_point(3.0, 2.0, 1.0)
+        p2 = self.shift_point(3.0, 2.0, 0.0)
+        p3 = self.shift_point(2.0, 2.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -170,10 +170,10 @@ class Cross(Entity):
         ])
 
     def top_left_face(self):  # самий низ
-        p0 = self.shift_point(-1.0, 7.0, -1.0)
-        p1 = self.shift_point(-1.0, 9.0, -1.0)
-        p2 = self.shift_point(-1.0, 9.0, 1.0)
-        p3 = self.shift_point(-1.0, 7.0, 1.0)
+        p0 = self.shift_point(1.0, 0.0, 0.0)
+        p1 = self.shift_point(1.0, 0.0, 1.0)
+        p2 = self.shift_point(1.0, 1.0, 1.0)
+        p3 = self.shift_point(1.0, 1.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -183,10 +183,10 @@ class Cross(Entity):
         ])
 
     def top_right_face(self):  # самий низ
-        p0 = self.shift_point(1.0, 7.0, 1.0)
-        p1 = self.shift_point(1.0, 9.0, 1.0)
-        p2 = self.shift_point(1.0, 9.0, -1.0)
-        p3 = self.shift_point(1.0, 7.0, -1.0)
+        p0 = self.shift_point(2.0, 1.0, 0.0)
+        p1 = self.shift_point(2.0, 1.0, 1.0)
+        p2 = self.shift_point(2.0, 0.0, 1.0)
+        p3 = self.shift_point(2.0, 0.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -196,10 +196,10 @@ class Cross(Entity):
         ])
 
     def bottom_left_face(self):  # самий низ
-        p0 = self.shift_point(-1.0, 0.0, -1.0)
-        p1 = self.shift_point(-1.0, 5.0, -1.0)
-        p2 = self.shift_point(-1.0, 5.0, 1.0)
-        p3 = self.shift_point(-1.0, 0.0, 1.0)
+        p0 = self.shift_point(1.0, 2.0, 0.0)
+        p1 = self.shift_point(1.0, 2.0, 1.0)
+        p2 = self.shift_point(1.0, 4.0, 1.0)
+        p3 = self.shift_point(1.0, 4.0, 0.0)
 
         return Face([
             Edge(p0, p1),
@@ -209,10 +209,10 @@ class Cross(Entity):
         ])
 
     def bottom_right_face(self):  # самий низ
-        p0 = self.shift_point(1.0, 0.0, 1.0)
-        p1 = self.shift_point(1.0, 5.0, 1.0)
-        p2 = self.shift_point(1.0, 5.0, -1.0)
-        p3 = self.shift_point(1.0, 0.0, -1.0)
+        p0 = self.shift_point(2.0, 4.0, 0.0)
+        p1 = self.shift_point(2.0, 4.0, 1.0)
+        p2 = self.shift_point(2.0, 2.0, 1.0)
+        p3 = self.shift_point(2.0, 2.0, 0.0)
 
         return Face([
             Edge(p0, p1),
