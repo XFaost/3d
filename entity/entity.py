@@ -8,7 +8,7 @@ class Entity:
     def __init__(self, cords: Point3D, scale: float):
         self.cords = cords
         self.scale = scale
-        self.faces = None
+        self.faces: List[Face] = []
 
     def set_faces(self, faces: List[Face]):
         self.faces = faces

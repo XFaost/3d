@@ -113,14 +113,24 @@ class Camera:
             self,
             entity: Entity
     ):
+        faces_with_dot_product = []
+
         for face in entity.faces:
             normal = self.get_face_normal(face)
 
-            if (
-                    normal.x * (face.edges[0].a.x - self._position.x) +
-                    normal.y * (face.edges[0].a.y - self._position.y) +
-                    normal.z * (face.edges[0].a.z - self._position.z) < 0.0
-            ):
+            dor_product = normal.x * (face.edges[0].a.x - self._position.x) + normal.y * (face.edges[0].a.y - self._position.y) + normal.z * (face.edges[0].a.z - self._position.z)
+            faces_with_dot_product.append({
+                'face': face,
+                'dot_product': dor_product
+            })
+
+        faces_with_dot_product = sorted(faces_with_dot_product, key=lambda d: d['dot_product'], reverse=True)
+
+        for face_with_dot_product in faces_with_dot_product:
+            face = face_with_dot_product['face']
+            dot_product = face_with_dot_product['dot_product']
+
+            if dot_product < 0.0:
                 color = RED
             else:
                 color = BLUE
