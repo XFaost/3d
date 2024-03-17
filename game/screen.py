@@ -9,7 +9,7 @@ class Screen:
         pygame.init()
         self._width = width
         self._height = height
-        self._center = width / 2, height / 2
+        self._center = 0.5 * width, 0.5 * height
         self._screen = pygame.display.set_mode((width, height))
         self._clock = pygame.time.Clock()
         self._fps = 60
@@ -46,7 +46,7 @@ class Screen:
         return self._screen
 
     def point_to_screen_cords(self, point: Point2D):
-        return Point2D((point.x + 1) * self.center[0], (point.y+1) * self.center[1])
+        return Point2D((point.x + 1) * self.center[0], (point.y + 1) * self.center[1])
 
     @property
     def width(self):

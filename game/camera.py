@@ -51,7 +51,7 @@ class Camera:
 
     def point_from_3d_to_2d(self, point: Point3D):
         # в pygame y та z розвернуті, тому додаю мінус
-        fix_point = Point3D(point.x, -point.y, -point.z)
+        fix_point = Point3D(point.x, point.y, point.z)
         point_projected = self._multiply_matrix_vector(fix_point, self._mat_proj)
 
         result = point_projected
