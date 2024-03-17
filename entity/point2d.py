@@ -7,3 +7,6 @@ class Point2D:
     def get(self):
         return self.x, self.y
 
+    def __repr__(self):
+        return f'{self.x}, {self.y}'
+

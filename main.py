@@ -13,13 +13,13 @@ def run():
     camera = Camera(3, screen)
     environment = Environment(BLACK)
 
-    cross_left = Cross(Point3D(-5, -1, -5), 0.5, RED)
-    cross_center0 = Cross(Point3D(0, -3, -5), 0.5, RED)
-    cross_center1 = Cross(Point3D(0, 1, -7), 0.2, RED)
-    cross_right = Cross(Point3D(5, -1, -5), 0.5, RED)
+    cross_left = Cross(Point3D(-5.0, -1.0, -5.0), 0.5, RED)
+    cross_center0 = Cross(Point3D(0.0, -3.0, -5.0), 0.5, RED)
+    cross_center1 = Cross(Point3D(0.0, 1.0, -7.0), 0.5, RED)
+    cross_right = Cross(Point3D(5.0, -1.0, -5.0), 0.5, RED)
 
-    surface0 = Surface(Point3D(0, -5, 0), 1, RED)
-    surface1 = Surface(Point3D(0, 0, -5), 1, RED)
+    surface0 = Surface(Point3D(1.0, 0.0, 0.0), 0.5, RED)
+    surface1 = Surface(Point3D(0.0, 0.0, -1.0), 1.0, RED)
 
     game = Game(
         screen,
@@ -31,8 +31,8 @@ def run():
     game.add_entity(cross_center0)
     game.add_entity(cross_center1)
     game.add_entity(cross_right)
-    # game.add_entity(surface0)
-    # game.add_entity(surface1)
+    #game.add_entity(surface0)
+    #game.add_entity(surface1)
 
     game.run()
 

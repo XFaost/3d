@@ -46,8 +46,7 @@ class Screen:
         return self._screen
 
     def point_to_screen_cords(self, point: Point2D):
-        # в pygame y розвернутий, тому додаю мінус
-        return Point2D(point.x*100 + self.center[0], (-point.y*100) + self.center[1])
+        return Point2D((point.x + 1) * self.center[0], (point.y+1) * self.center[1])
 
     @property
     def width(self):

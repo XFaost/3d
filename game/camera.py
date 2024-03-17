@@ -50,9 +50,10 @@ class Camera:
         self._mat_proj[3][3] = 0.0
 
     def point_from_3d_to_2d(self, point: Point3D):
-        # в pygame z розвернутий, тому додаю мінус
-        fix_point = Point3D(point.x, point.y, -point.z)
+        # в pygame y та z розвернуті, тому додаю мінус
+        fix_point = Point3D(point.x, -point.y, -point.z)
         point_projected = self._multiply_matrix_vector(fix_point, self._mat_proj)
+
         result = point_projected
         return Point2D(result.x, result.y)
 
@@ -66,11 +67,14 @@ class Camera:
         a_2d = self.point_from_3d_to_2d(a)
         b_2d = self.point_from_3d_to_2d(b)
 
+        a_screen_cords = self._screen.point_to_screen_cords(a_2d).get()
+        b_screen_cords = self._screen.point_to_screen_cords(b_2d).get()
+
         pygame.draw.line(
             self._screen.get(),
             RED.get(),
-            self._screen.point_to_screen_cords(a_2d).get(),
-            self._screen.point_to_screen_cords(b_2d).get(),
+            a_screen_cords,
+            b_screen_cords,
             1
         )
 
