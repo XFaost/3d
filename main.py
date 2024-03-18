@@ -9,20 +9,47 @@ from game.screen import Screen
 from utils.color import RED, BLACK
 
 
+class DownwardCross(Cross):
+    def move(self):
+        self.cords.y += 0.02
+        self.init_faces()
+
+
+def get_static_crosses():
+    static_crosses = []
+
+    for i in range(40):
+        static_crosses.append(
+            Cross(Point3D(-8.8, -5.0 + i * 0.25, 5.0), 0.05, RED)
+        )
+    for i in range(20):
+        static_crosses.append(
+            Cross(Point3D(-8.5, -5.0 + i * 0.5, 5.0), 0.1, RED)
+        )
+    for i in range(14):
+        static_crosses.append(
+            Cross(Point3D(-8.0, -5.0 + i * 0.7, 5.0), 0.15, RED)
+        )
+    for i in range(11):
+        static_crosses.append(
+            Cross(Point3D(-7.3, -5.0 + i * 0.9, 5.0), 0.2, RED)
+        )
+    for i in range(8):
+        static_crosses.append(
+            Cross(Point3D(-6.4, -5.0 + i * 1.3, 5.0), 0.25, RED)
+        )
+    for i in range(8):
+        static_crosses.append(
+            Cross(Point3D(-5.3, -5.0 + i * 1.3, 5.0), 0.3, RED)
+        )
+
+    return static_crosses
+
+
 def run():
     screen = Screen(1768, 1000)
     camera = Camera(3, screen)
     environment = Environment(BLACK)
-
-    cross_left = Cross(Point3D(-3.0, 1.0, 5.0), 0.8, RED)
-    cross_center0 = Cross(Point3D(0.0, 0.0, 5.0), 0.5, RED)
-    cross_center1 = Cross(Point3D(0.0, 0.0, 7.0), 0.5, RED)
-    cross_right = Cross(Point3D(3.0, -1.0, 5.0), 0.5, RED)
-
-    surface0 = Surface(Point3D(1.0, 0.0, 1.0), 0.5, RED)
-    surface1 = Surface(Point3D(0.0, 0.0, 1.0), 1.0, RED)
-
-    cube = Cube(Point3D(1.0, 2.0, 5.0), 1, RED)
 
     game = Game(
         screen,
@@ -30,13 +57,12 @@ def run():
         environment
     )
 
-    game.add_entity(cross_left)
-    #game.add_entity(cross_center0)
-    #game.add_entity(cross_center1)
-    #game.add_entity(cross_right)
-    # game.add_entity(surface0)
-    # game.add_entity(surface1)
-    game.add_entity(cube)
+    for i in get_static_crosses():
+        game.add_entity(i)
+
+    game.add_entity(
+        DownwardCross(Point3D(0, 0.0, 5.0), 0.3, RED)
+    )
 
     game.run()
 

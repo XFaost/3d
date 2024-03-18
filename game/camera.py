@@ -75,7 +75,7 @@ class Camera:
             color.get(),
             a_screen_cords,
             b_screen_cords,
-            2
+            1
         )
 
     def render_environment(
@@ -141,3 +141,5 @@ class Camera:
                     edge.b,
                     color
                 )
+
+

@@ -19,3 +19,6 @@ class Entity:
             self.cords.y + (shift_y * self.scale),
             self.cords.z + (shift_z * self.scale)
         )
+
+    def move(self):
+        pass

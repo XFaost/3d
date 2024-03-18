@@ -30,6 +30,9 @@ class Game:
             )
 
             for entity in self._entities:
+                entity.move()
+
+            for entity in self._entities:
                 self._camera.render_3d_entity(entity)
 
             self._screen.update()

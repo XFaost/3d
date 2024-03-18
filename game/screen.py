@@ -34,6 +34,7 @@ class Screen:
     def update(self):
         pygame.display.update()
         self._clock.tick(self._fps)
+        pygame.display.set_caption(f'Game {self._clock.get_fps()}')
 
     def fill(self, color: Color):
         self._screen.fill(color.get())

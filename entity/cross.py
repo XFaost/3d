@@ -225,6 +225,9 @@ class Cross(Entity):
         self.color = color
         super().__init__(cords, scale)
 
+        self.init_faces()
+
+    def init_faces(self):
         self.set_faces([
             self.top_face(),
             self.bottom_face(),
