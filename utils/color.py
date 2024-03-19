@@ -2,7 +2,7 @@ import numpy as np
 
 
 def random_color():
-    return list(np.random.choice(range(256), size=3))
+    return Color(*list(np.random.choice(range(256), size=3)))
 
 
 class Color:

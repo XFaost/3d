@@ -1,14 +1,23 @@
-from typing import List
+from typing import List, Optional
 
 from entity.face import Face
 from entity.point3d import Point3D
+from utils.color import Color, random_color
 
 
 class Entity:
-    def __init__(self, cords: Point3D, scale: float):
+    def __init__(
+            self,
+            cords: Point3D,
+            scale: float,
+            visible_lines_color: Optional[Color] = None,
+            invisible_lines_color: Optional[Color] = None
+    ):
         self.cords = cords
         self.scale = scale
         self.faces: List[Face] = []
+        self.visible_lines_color = visible_lines_color if visible_lines_color else random_color()
+        self.invisible_lines_color = invisible_lines_color if invisible_lines_color else random_color()
 
     def set_faces(self, faces: List[Face]):
         self.faces = faces

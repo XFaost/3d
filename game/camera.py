@@ -131,9 +131,9 @@ class Camera:
             dot_product = face_with_dot_product['dot_product']
 
             if dot_product < 0.0:
-                color = RED
+                color = entity.visible_lines_color
             else:
-                color = BLUE
+                color = entity.invisible_lines_color
 
             for edge in face.edges:
                 self.render_line(

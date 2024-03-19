@@ -1,9 +1,10 @@
+from typing import Optional
 
 from entity.edge import Edge
 from entity.entity import Entity
 from entity.face import Face
 from entity.point3d import Point3D
-from utils.color import Color
+from utils.color import Color, random_color
 
 
 class Cross(Entity):
@@ -221,9 +222,19 @@ class Cross(Entity):
             Edge(p3, p0),
         ])
 
-    def __init__(self, cords: Point3D, scale: float, color: Color):
-        self.color = color
-        super().__init__(cords, scale)
+    def __init__(
+            self,
+            cords: Point3D,
+            scale: float,
+            visible_lines_color: Optional[Color] = None,
+            invisible_lines_color: Optional[Color] = None
+    ):
+        super().__init__(
+            cords,
+            scale,
+            visible_lines_color,
+            invisible_lines_color
+        )
 
         self.init_faces()
 
