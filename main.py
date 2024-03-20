@@ -57,15 +57,18 @@ class LeftDownwardCross(Cross):
             visible_lines_color: Optional[Color] = None,
             invisible_lines_color: Optional[Color] = None,
     ):
+        self.__start_scale = scale
         self.__start_cords = Point3D(cords.x, cords.y, cords.z)
         super().__init__(cords, scale, visible_lines_color, invisible_lines_color)
 
     def move(self):
+        self.scale -= 0.005
         self.cords.x -= 0.05
         self.cords.y += 0.05
         if self.cords.x <= -4.0 or self.cords.y >= 4.0:
             self.cords.x = self.__start_cords.x
             self.cords.y = self.__start_cords.y
+            self.scale = self.__start_scale
         self.init_faces()
 
 
@@ -123,6 +126,10 @@ def get_static_crosses():
             Cross(Point3D(-5.3, -5.0 + i * 1.3, 5.0), 0.3)
         ])
 
+    static_crosses.append(Cross(Point3D(0, -4.0, 5.0), 0.05, RED, BLUE))
+    static_crosses.append(Cross(Point3D(-0.15, -4.0 - 0.15, 5.0), 0.15, RED, BLUE))
+    static_crosses.append(Cross(Point3D(-0.6, -4.0 - 0.6, 5.0), 0.45, RED, BLUE))
+
     return static_crosses
 
 
@@ -130,7 +137,7 @@ def get_dynamic_crosses():
     return (
         DownwardCross(Point3D(-4.0, -5.0, 5.0), 0.3, RED, BLUE),
         LeftwardCross(Point3D(5.0, 4.0, 5.0), 0.3, RED, BLUE),
-        LeftDownwardCross(Point3D(5.0, -5.0, 5.0), 0.3, RED, BLUE),
+        LeftDownwardCross(Point3D(5.0, -5.0, 5.0), 1, RED, BLUE),
         EllipseCross(Point3D(2.5, -2.0, 5.0), 0.3, 3, 2, RED, BLUE)
     )
 
