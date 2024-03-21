@@ -28,12 +28,17 @@ def generate_sphere_vertices():
                 x = round(np.sin(phi) * np.cos(theta), 4)
                 y = round(np.sin(phi) * np.sin(theta), 4)
                 z = round(np.cos(phi), 4)
-            else:
+                vertices.append((x, y, z))
+
+    for i in range(num_vertices):
+        theta = np.pi * i / (num_vertices - 1)
+        for j in range(num_vertices*2):
+            if j >= num_vertices:
                 phi = np.pi * (j-1) / (num_vertices - 1)
                 x = round(np.sin(phi) * np.cos(theta), 4)/2 * -1
                 y = round(np.sin(phi) * np.sin(theta), 4)/2 * -1
                 z = round(np.cos(phi), 4)/2
-            vertices.append((x, y, z))
+                vertices.append((x, y, z))
 
 
     return vertices
@@ -42,12 +47,21 @@ def generate_sphere_vertices():
 # Генерація полігонів для сфери
 def generate_sphere_polygons(num_vertices):
     polygons = []
-    for i in range(num_vertices):
+    num_vertices = 13
+    for i in range(num_vertices - 1):
         for j in range(num_vertices - 1):
             v1 = i * num_vertices + j
             v2 = (i + 1) % num_vertices * num_vertices + j
             v3 = (i + 1) % num_vertices * num_vertices + (j + 1)
             v4 = i * num_vertices + (j + 1)
+            polygons.append((v1, v2, v3, v4))
+
+    for i in range(num_vertices - 1):
+        for j in range(num_vertices - 1):
+            v1 = i * num_vertices + j +169
+            v2 = (i + 1) % num_vertices * num_vertices + j +169
+            v3 = (i + 1) % num_vertices * num_vertices + (j + 1) +169
+            v4 = i * num_vertices + (j + 1) +169
             polygons.append((v1, v2, v3, v4))
     return polygons
 
