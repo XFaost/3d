@@ -10,3 +10,10 @@ class Point2D:
     def __repr__(self):
         return f'{self.x}, {self.y}'
 
+    def __eq__(self, other):
+        if all([
+            self.x == other.x,
+            self.x == other.y
+        ]):
+            return True
+
