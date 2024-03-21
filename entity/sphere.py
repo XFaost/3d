@@ -12,7 +12,7 @@ class Sphere(Entity):
     def generate_sphere_vertices(self, num_vertices):
         vertices = []
         for i in range(num_vertices):
-            theta = 2 * math.pi * i / num_vertices
+            theta = math.pi * i / (num_vertices - 1)
             for j in range(num_vertices):
                 phi = math.pi * j / (num_vertices - 1)
                 x = math.sin(phi) * math.cos(theta)
@@ -48,8 +48,8 @@ class Sphere(Entity):
 
         faces = []
 
-        sphere_vertices = self.generate_sphere_vertices(12)
-        sphere_polygons = self.generate_sphere_polygons(12)
+        sphere_vertices = self.generate_sphere_vertices(13)
+        sphere_polygons = self.generate_sphere_polygons(13)
 
         for polygon in sphere_polygons:
             points = []

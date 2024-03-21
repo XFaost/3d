@@ -128,8 +128,8 @@ class Camera:
 
         for face in temp_entity.faces:
             for edge in face.edges:
-                point_rotated_a_z = edge.a#self._multiply_matrix_vector(edge.a, mat_rot_z)
-                point_rotated_b_z = edge.b#self._multiply_matrix_vector(edge.b, mat_rot_z)
+                point_rotated_a_z = self._multiply_matrix_vector(edge.a, mat_rot_z)
+                point_rotated_b_z = self._multiply_matrix_vector(edge.b, mat_rot_z)
                 point_rotated_a_zx = self._multiply_matrix_vector(point_rotated_a_z, mat_rot_x)
                 point_rotated_b_zx = self._multiply_matrix_vector(point_rotated_b_z, mat_rot_x)
 
