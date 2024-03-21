@@ -59,6 +59,14 @@ def generate_sphere_polygons(num_vertices):
             v4 = i * num_vertices + (j + 1) + num_vertices ** 2
             polygons.append((v1, v2, v3, v4))
 
+    for i in (0, num_vertices - 1):
+        for j in range(num_vertices - 1):
+            v1 = i * num_vertices + j
+            v2 = i * num_vertices + (j + 1) + num_vertices ** 2 + (11-2*j)
+            v3 = i * num_vertices + j + num_vertices ** 2 + (11-2*j)
+            v4 = i * num_vertices + (j + 1)
+            polygons.append((v1, v2, v3, v4))
+
     return polygons
 
 
