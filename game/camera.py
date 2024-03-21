@@ -1,4 +1,5 @@
-from math import tan, sqrt
+import copy
+from math import tan, sqrt, cos, sin
 
 import numpy
 import pygame
@@ -34,6 +35,28 @@ class Camera:
 
         return Point3D(float(x), float(y), float(z))
 
+    def init_mat_rot(self, f_theta: float):
+        mat_rot_z = numpy.zeros((4, 4))
+        mat_rot_x = numpy.zeros((4, 4))
+
+        # Rotation Z
+        mat_rot_z[0][0] = cos(f_theta)
+        mat_rot_z[0][1] = sin(f_theta)
+        mat_rot_z[1][0] = -sin(f_theta)
+        mat_rot_z[1][1] = cos(f_theta)
+        mat_rot_z[2][2] = 1
+        mat_rot_z[3][3] = 1
+
+        # Rotation X
+        mat_rot_x[0][0] = 1
+        mat_rot_x[1][1] = cos(f_theta * 0.5)
+        mat_rot_x[1][2] = sin(f_theta * 0.5)
+        mat_rot_x[2][1] = -sin(f_theta * 0.5)
+        mat_rot_x[2][2] = cos(f_theta * 0.5)
+        mat_rot_x[3][3] = 1
+
+        return mat_rot_z, mat_rot_x
+
     def _init_mat_proj(self):
         self._mat_proj = numpy.zeros((4, 4))
 
@@ -50,33 +73,19 @@ class Camera:
         self._mat_proj[2][3] = 1.0
         self._mat_proj[3][3] = 0.0
 
-    def point_from_3d_to_2d(self, point: Point3D):
-        # в pygame y та z розвернуті, тому додаю мінус
+    def point_from_3d_to_2d(self, point: Point3D, f_theta: float):
         fix_point = Point3D(point.x, point.y, point.z)
-        point_projected = self._multiply_matrix_vector(fix_point, self._mat_proj)
+        mat_rot_z, mat_rot_x = self.init_mat_rot(f_theta)
+
+        point_rotated_z = self._multiply_matrix_vector(fix_point, mat_rot_z)
+        point_rotated_zx = self._multiply_matrix_vector(point_rotated_z, mat_rot_x)
+
+        point_rotated_zx.z += 3.0
+
+        point_projected = self._multiply_matrix_vector(point_rotated_zx, self._mat_proj)
 
         result = point_projected
         return Point2D(result.x, result.y)
-
-    def render_line(
-            self,
-            a: Point3D,
-            b: Point3D,
-            color: Color
-    ):
-        a_2d = self.point_from_3d_to_2d(a)
-        b_2d = self.point_from_3d_to_2d(b)
-
-        a_screen_cords = self._screen.point_to_screen_cords(a_2d).get()
-        b_screen_cords = self._screen.point_to_screen_cords(b_2d).get()
-
-        pygame.draw.line(
-            self._screen.get(),
-            color.get(),
-            a_screen_cords,
-            b_screen_cords,
-            1
-        )
 
     def render_environment(
             self,
@@ -103,9 +112,10 @@ class Camera:
 
         # It's normally normal to normalise the normal
         l = sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z)
-        normal.x /= l
-        normal.y /= l
-        normal.z /= l
+        if l != 0:
+            normal.x /= l
+            normal.y /= l
+            normal.z /= l
 
         return normal
 
@@ -113,33 +123,40 @@ class Camera:
             self,
             entity: Entity
     ):
-        faces_with_dot_product = []
+        temp_entity = copy.deepcopy(entity)
+        mat_rot_z, mat_rot_x = self.init_mat_rot(entity.f_theta)
 
-        for face in entity.faces:
-            normal = self.get_face_normal(face)
-
-            dor_product = normal.x * (face.edges[0].a.x - self._position.x) + normal.y * (face.edges[0].a.y - self._position.y) + normal.z * (face.edges[0].a.z - self._position.z)
-            faces_with_dot_product.append({
-                'face': face,
-                'dot_product': dor_product
-            })
-
-        faces_with_dot_product = sorted(faces_with_dot_product, key=lambda d: d['dot_product'], reverse=True)
-
-        for face_with_dot_product in faces_with_dot_product:
-            face = face_with_dot_product['face']
-            dot_product = face_with_dot_product['dot_product']
-
-            if dot_product < 0.0:
-                color = entity.visible_lines_color
-            else:
-                color = entity.invisible_lines_color
-
+        for face in temp_entity.faces:
             for edge in face.edges:
-                self.render_line(
-                    edge.a,
-                    edge.b,
-                    color
-                )
+                point_rotated_a_z = self._multiply_matrix_vector(edge.a, mat_rot_z)
+                point_rotated_b_z = self._multiply_matrix_vector(edge.b, mat_rot_z)
+                point_rotated_a_zx = self._multiply_matrix_vector(point_rotated_a_z, mat_rot_x)
+                point_rotated_b_zx = self._multiply_matrix_vector(point_rotated_b_z, mat_rot_x)
 
+                point_rotated_a_zx.z += 3.0
+                point_rotated_b_zx.z += 3.0
 
+                edge.a = point_rotated_a_zx
+                edge.b = point_rotated_b_zx
+
+        for face in temp_entity.faces:
+            normal = self.get_face_normal(face)
+            dot_product = normal.x * (face.edges[0].a.x - self._position.x) + normal.y * (
+                    face.edges[0].a.y - self._position.y) + normal.z * (face.edges[0].a.z - self._position.z)
+            if dot_product < 0.0:
+                for edge in face.edges:
+                    point_a_translated = self._multiply_matrix_vector(edge.a, self._mat_proj)
+                    point_b_translated = self._multiply_matrix_vector(edge.b, self._mat_proj)
+
+                    a_screen_cords = self._screen.point_to_screen_cords(Point2D(point_a_translated.x, point_a_translated.y)).get()
+                    b_screen_cords = self._screen.point_to_screen_cords(Point2D(point_b_translated.x, point_b_translated.y)).get()
+
+                    pygame.draw.line(
+                        self._screen.get(),
+                        RED.get(),
+                        a_screen_cords,
+                        b_screen_cords,
+                        1
+                    )
+
+        entity.f_theta += 1.0 * 0.01

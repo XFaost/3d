@@ -10,14 +10,13 @@ class Entity:
             self,
             cords: Point3D,
             scale: float,
-            visible_lines_color: Optional[Color] = None,
-            invisible_lines_color: Optional[Color] = None
+            lines_color: Optional[Color] = None
     ):
         self.cords = cords
         self.scale = scale
         self.faces: List[Face] = []
-        self.visible_lines_color = visible_lines_color if visible_lines_color else random_color()
-        self.invisible_lines_color = invisible_lines_color if invisible_lines_color else random_color()
+        self.lines_color = lines_color if lines_color else random_color()
+        self.f_theta = 0.0
 
     def set_faces(self, faces: List[Face]):
         self.faces = faces
