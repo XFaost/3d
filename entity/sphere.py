@@ -1,8 +1,6 @@
 import math
 from typing import Optional
 
-import numpy as np
-
 from entity.edge import Edge
 from entity.entity import Entity
 from entity.face import Face
@@ -14,12 +12,12 @@ class Sphere(Entity):
     def generate_sphere_vertices(self, num_vertices):
         vertices = []
         for i in range(num_vertices):
-            theta = 2 * np.pi * i / num_vertices
+            theta = 2 * math.pi * i / num_vertices
             for j in range(num_vertices):
-                phi = np.pi * j / (num_vertices - 1)
-                x = np.sin(phi) * np.cos(theta)
-                y = np.sin(phi) * np.sin(theta)
-                z = np.cos(phi)
+                phi = math.pi * j / (num_vertices - 1)
+                x = math.sin(phi) * math.cos(theta)
+                y = math.sin(phi) * math.sin(theta)
+                z = math.cos(phi)
                 vertices.append((x, y, z))
         return vertices
 
@@ -27,11 +25,13 @@ class Sphere(Entity):
         polygons = []
         for i in range(num_vertices):
             for j in range(num_vertices - 1):
-                v1 = i * num_vertices + j
-                v2 = (i + 1) % num_vertices * num_vertices + j
-                v3 = (i + 1) % num_vertices * num_vertices + (j + 1)
-                v4 = i * num_vertices + (j + 1)
-                polygons.append((v1, v2, v3, v4))
+                vertices = (
+                    i * num_vertices + (j + 1),
+                    (i + 1) % num_vertices * num_vertices + (j + 1),
+                    (i + 1) % num_vertices * num_vertices + j,
+                    i * num_vertices + j
+                )
+                polygons.append(vertices)
         return polygons
 
     def __init__(
@@ -52,24 +52,27 @@ class Sphere(Entity):
         sphere_polygons = self.generate_sphere_polygons(12)
 
         for polygon in sphere_polygons:
-            p0 = self.shift_point(sphere_vertices[polygon[3]][0], sphere_vertices[polygon[3]][1],
-                                  sphere_vertices[polygon[3]][2])
-            p1 = self.shift_point(sphere_vertices[polygon[2]][0], sphere_vertices[polygon[2]][1],
-                                  sphere_vertices[polygon[2]][2])
-            p2 = self.shift_point(sphere_vertices[polygon[1]][0], sphere_vertices[polygon[1]][1],
-                                  sphere_vertices[polygon[1]][2])
-            p3 = self.shift_point(sphere_vertices[polygon[0]][0], sphere_vertices[polygon[0]][1], sphere_vertices[polygon[0]][2])
+            points = []
+            for i in range(len(polygon)):
+                points.append(
+                    self.shift_point(
+                        sphere_vertices[polygon[i]][0],
+                        sphere_vertices[polygon[i]][1],
+                        sphere_vertices[polygon[i]][2]
+                    )
+                )
 
-
-
+            edges = []
+            for i in range(len(points) - 1):
+                edges.append(
+                    Edge(points[i], points[i + 1])
+                )
+            edges.append(
+                Edge(points[-1], points[0])
+            )
 
             faces.append(
-                Face([
-                    Edge(p0, p1),
-                    Edge(p1, p2),
-                    Edge(p2, p3),
-                    Edge(p3, p0)
-                ])
+                Face(edges)
             )
 
         self.set_faces(faces)
