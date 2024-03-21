@@ -52,8 +52,8 @@ class Sphere(Entity):
         for i in (0, num_vertices - 1):
             for j in range(num_vertices - 1):
                 v1 = i * num_vertices + j
-                v2 = i * num_vertices + (j + 1) + num_vertices ** 2 + (11 - 2 * j)
-                v3 = i * num_vertices + j + num_vertices ** 2 + (11 - 2 * j)
+                v2 = i * num_vertices + (j + 1) + num_vertices ** 2 + ((num_vertices -2) - 2 * j)
+                v3 = i * num_vertices + j + num_vertices ** 2 + ((num_vertices -2) - 2 * j)
                 v4 = i * num_vertices + (j + 1)
 
                 if i == 0:
@@ -78,8 +78,8 @@ class Sphere(Entity):
 
         faces = []
 
-        sphere_vertices = self.generate_sphere_vertices(13)
-        sphere_polygons = self.generate_sphere_polygons(13)
+        sphere_vertices = self.generate_sphere_vertices(12)
+        sphere_polygons = self.generate_sphere_polygons(12)
 
         for polygon in sphere_polygons:
             points = []
