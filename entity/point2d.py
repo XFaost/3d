@@ -1,8 +1,8 @@
 
 class Point2D:
     def __init__(self, x: float, y: float):
-        self.x = x
-        self.y = y
+        self.x = round(x, 4)
+        self.y = round(y, 4)
 
     def get(self):
         return self.x, self.y

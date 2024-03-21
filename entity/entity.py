@@ -23,9 +23,9 @@ class Entity:
 
     def shift_point(self, shift_x: float, shift_y: float, shift_z: float):
         return Point3D(
-            round(self.cords.x + (shift_x * self.scale), 2),
-            round(self.cords.y + (shift_y * self.scale), 2),
-            round(self.cords.z + (shift_z * self.scale), 2)
+            self.cords.x + (shift_x * self.scale),
+            self.cords.y + (shift_y * self.scale),
+            self.cords.z + (shift_z * self.scale)
         )
 
     def move(self):
