@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
+
 def draw_sphere_frame(vertices, polygons):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -12,6 +13,7 @@ def draw_sphere_frame(vertices, polygons):
             z = [vertices[polygon[i % len(polygon)]][2], vertices[polygon[(i + 1) % len(polygon)]][2]]
             ax.plot(x, y, z, color='black')
     plt.show()
+
 
 # Генерація вершин сфери
 def generate_sphere_vertices(num_vertices):
@@ -26,6 +28,7 @@ def generate_sphere_vertices(num_vertices):
             vertices.append((x, y, z))
     return vertices
 
+
 # Генерація полігонів для сфери
 def generate_sphere_polygons(num_vertices):
     polygons = []
@@ -37,6 +40,7 @@ def generate_sphere_polygons(num_vertices):
             v4 = i * num_vertices + (j + 1)
             polygons.append((v1, v2, v3, v4))
     return polygons
+
 
 num_vertices = 12  # кількість вершин кулі
 sphere_vertices = generate_sphere_vertices(num_vertices)

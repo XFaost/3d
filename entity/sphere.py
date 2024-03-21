@@ -64,11 +64,10 @@ class Sphere(Entity):
 
             edges = []
             for i in range(len(points) - 1):
-                if points[i] == points[i + 1]:
-                    continue
-                edges.append(
-                    Edge(points[i], points[i + 1])
-                )
+                if points[i] != points[i + 1]:
+                    edges.append(
+                        Edge(points[i], points[i + 1])
+                    )
             if points[-1] != points[0]:
                 edges.append(
                     Edge(points[-1], points[0])
