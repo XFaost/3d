@@ -12,7 +12,7 @@ from entity.point2d import Point2D
 from entity.point3d import Point3D
 from game.environment import Environment
 from game.screen import Screen
-from utils.color import RED, Color, BLUE
+from utils.color import RED, Color, BLUE, WHITE
 
 
 class Camera:
@@ -89,19 +89,19 @@ class Camera:
         result = point_projected
         return Point2D(result.x, result.y)
 
-    def draw_line(self, a: Point2D, b: Point2D):
+    def draw_line(self, a: Point2D, b: Point2D, color: Color = RED):
         a_screen_cords = self._screen.point_to_screen_cords(a).get()
         b_screen_cords = self._screen.point_to_screen_cords(b).get()
 
         pygame.draw.line(
             self._screen.get(),
-            RED.get(),
+            color.get(),
             a_screen_cords,
             b_screen_cords,
             1
         )
 
-    def point_inside_face(self, point: Point2D, face: Face):
+    def point_inside_face(self, face: Face, point: Point2D):
         cnt = 0
 
         for edge in face.edges:
@@ -139,9 +139,9 @@ class Camera:
 
         for edge in face.edges:
             print('edge',
-                self._screen.point_to_screen_cords(edge.a_2d).get(), ',',
-                self._screen.point_to_screen_cords(edge.b_2d).get()
-            )
+                  self._screen.point_to_screen_cords(edge.a_2d).get(), ',',
+                  self._screen.point_to_screen_cords(edge.b_2d).get()
+                  )
             if all([
                 any([
                     edge.a_2d.x <= point.x,
@@ -197,6 +197,14 @@ class Camera:
         )
         self.draw_line(a, b)
 
+        # next_point = Point2D(point.x, point.y + 0.01)
+        # if self.point_inside_face(face, next_point):
+        #     self.draw_face(face, next_point)
+
+        next_point = Point2D(point.x, point.y - 0.001)
+        if self.point_inside_face(face, next_point):
+            self.draw_face(face, next_point)
+
     def render_environment(
             self,
             environment: Environment
@@ -250,4 +258,4 @@ class Camera:
                 self.draw_face(face)
 
                 for edge in face.edges:
-                    self.draw_line(edge.a_2d, edge.b_2d)
+                    self.draw_line(edge.a_2d, edge.b_2d, WHITE)
