@@ -5,3 +5,6 @@ class Edge:
     def __init__(self, a: Point3D, b: Point3D):
         self.a = a
         self.b = b
+
+        self.a_2d = None
+        self.b_2d = None

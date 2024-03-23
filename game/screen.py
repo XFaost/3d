@@ -47,7 +47,10 @@ class Screen:
         return self._screen
 
     def point_to_screen_cords(self, point: Point2D):
-        return Point2D((point.x + 1) * self.center[0], (point.y + 1) * self.center[1])
+        return Point2D(
+            round((point.x + 1) * self.center[0]),
+            round((point.y + 1) * self.center[1])
+        )
 
     @property
     def width(self):

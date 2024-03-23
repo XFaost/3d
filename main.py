@@ -2,6 +2,7 @@ from math import radians, cos, sin
 from typing import Optional
 
 from entity.cross import Cross
+from entity.cube import Cube
 from entity.point3d import Point3D
 from game.camera import Camera
 from game.environment import Environment
@@ -153,11 +154,13 @@ def run():
         environment
     )
 
-    for i in get_static_crosses():
-        game.add_entity(i)
+    # for i in get_static_crosses():
+    #     game.add_entity(i)
+    #
+    # for i in get_dynamic_crosses():
+    #     game.add_entity(i)
 
-    for i in get_dynamic_crosses():
-        game.add_entity(i)
+    game.add_entity(Cube(Point3D(-1.75, -1, 1.0), 0.05, RED, BLUE))
 
     game.run()
 

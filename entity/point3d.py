@@ -5,5 +5,8 @@ class Point3D:
         self.y = y
         self.z = z
 
+    def __round(self, value):
+        return round(value, 4)
+
     def __repr__(self):
-        return f'{self.x}, {self.y}, {self.z}'
+        return f'{self.__round(self.x)}, {self.__round(self.y)}, {self.__round(self.z)}'

@@ -1,8 +1,11 @@
-from math import tan, sqrt
+import copy
+from math import tan, sqrt, cos, sin
+from typing import Optional
 
 import numpy
 import pygame
 
+from entity.edge import Edge
 from entity.entity import Entity
 from entity.face import Face
 from entity.point2d import Point2D
@@ -34,6 +37,28 @@ class Camera:
 
         return Point3D(float(x), float(y), float(z))
 
+    def init_mat_rot(self, f_theta: float):
+        mat_rot_z = numpy.zeros((4, 4))
+        mat_rot_x = numpy.zeros((4, 4))
+
+        # Rotation Z
+        mat_rot_z[0][0] = cos(f_theta)
+        mat_rot_z[0][1] = sin(f_theta)
+        mat_rot_z[1][0] = -sin(f_theta)
+        mat_rot_z[1][1] = cos(f_theta)
+        mat_rot_z[2][2] = 1
+        mat_rot_z[3][3] = 1
+
+        # Rotation X
+        mat_rot_x[0][0] = 1
+        mat_rot_x[1][1] = cos(f_theta * 0.5)
+        mat_rot_x[1][2] = sin(f_theta * 0.5)
+        mat_rot_x[2][1] = -sin(f_theta * 0.5)
+        mat_rot_x[2][2] = cos(f_theta * 0.5)
+        mat_rot_x[3][3] = 1
+
+        return mat_rot_z, mat_rot_x
+
     def _init_mat_proj(self):
         self._mat_proj = numpy.zeros((4, 4))
 
@@ -50,33 +75,127 @@ class Camera:
         self._mat_proj[2][3] = 1.0
         self._mat_proj[3][3] = 0.0
 
-    def point_from_3d_to_2d(self, point: Point3D):
-        # в pygame y та z розвернуті, тому додаю мінус
+    def point_from_3d_to_2d(self, point: Point3D, f_theta: float):
         fix_point = Point3D(point.x, point.y, point.z)
-        point_projected = self._multiply_matrix_vector(fix_point, self._mat_proj)
+        mat_rot_z, mat_rot_x = self.init_mat_rot(f_theta)
+
+        point_rotated_z = self._multiply_matrix_vector(fix_point, mat_rot_z)
+        point_rotated_zx = self._multiply_matrix_vector(point_rotated_z, mat_rot_x)
+
+        point_rotated_zx.z += 3.0
+
+        point_projected = self._multiply_matrix_vector(point_rotated_zx, self._mat_proj)
 
         result = point_projected
         return Point2D(result.x, result.y)
 
-    def render_line(
-            self,
-            a: Point3D,
-            b: Point3D,
-            color: Color
-    ):
-        a_2d = self.point_from_3d_to_2d(a)
-        b_2d = self.point_from_3d_to_2d(b)
-
-        a_screen_cords = self._screen.point_to_screen_cords(a_2d).get()
-        b_screen_cords = self._screen.point_to_screen_cords(b_2d).get()
+    def draw_line(self, a: Point2D, b: Point2D):
+        a_screen_cords = self._screen.point_to_screen_cords(a).get()
+        b_screen_cords = self._screen.point_to_screen_cords(b).get()
 
         pygame.draw.line(
             self._screen.get(),
-            color.get(),
+            RED.get(),
             a_screen_cords,
             b_screen_cords,
             1
         )
+
+    def point_inside_face(self, point: Point2D, face: Face):
+        cnt = 0
+
+        for edge in face.edges:
+            if not edge.a_2d or not edge.b_2d:
+                raise Exception()
+            (x1, y1), (x2, y2) = edge.a_2d.get(), edge.b_2d.get()
+
+            try:
+                r = ((point.y - y1) / (y2 - y1)) * (x2 - x1)
+            except ZeroDivisionError:
+                r = 0
+
+            if (point.y < y1) != (point.y < y2) and point.x < x1 + r:
+                cnt += 1
+
+        return cnt % 2 == 1
+
+    def draw_face(self, face: Face, point: Optional[Point2D] = None):
+        print('==============')
+        if not point:
+            x = (face.edges[0].a_2d.x + face.edges[1].a_2d.x + face.edges[1].b_2d.x) / 3
+            y = (face.edges[0].a_2d.y + face.edges[1].a_2d.y + face.edges[1].b_2d.y) / 3
+            point = Point2D(x, y)
+
+        for edge in face.edges:
+            print(self._screen.point_to_screen_cords(edge.a_2d).get(), end=',')
+        print('\n')
+        print(self._screen.point_to_screen_cords(point).get())
+
+        a = Point2D(0, point.y)
+        b = Point2D(0, point.y)
+
+        left_edge = None
+        right_edge = None
+
+        for edge in face.edges:
+            print('edge',
+                self._screen.point_to_screen_cords(edge.a_2d).get(), ',',
+                self._screen.point_to_screen_cords(edge.b_2d).get()
+            )
+            if all([
+                any([
+                    edge.a_2d.x <= point.x,
+                    edge.b_2d.x <= point.x
+                ]),
+                edge.a_2d.y <= point.y,
+                edge.b_2d.y >= point.y,
+            ]):
+                left_edge = edge
+            elif all([
+                any([
+                    edge.a_2d.x >= point.x,
+                    edge.b_2d.x >= point.x
+                ]),
+                edge.a_2d.y >= point.y,
+                edge.b_2d.y <= point.y,
+            ]):
+                right_edge = edge
+
+        if not left_edge or not right_edge:
+            raise Exception('point is not valid')
+
+        print(
+            self._screen.point_to_screen_cords(left_edge.a_2d).get(), ',',
+            self._screen.point_to_screen_cords(left_edge.b_2d).get(), ',',
+            self._screen.point_to_screen_cords(right_edge.a_2d).get(), ',',
+            self._screen.point_to_screen_cords(right_edge.b_2d).get()
+        )
+
+        x1 = abs(left_edge.a_2d.x - left_edge.b_2d.x)
+        x2 = abs(a.y - left_edge.a_2d.y)
+        x3 = abs(left_edge.b_2d.y - left_edge.a_2d.y)
+        len_left = ((x1) * (x2)) / (x3)
+
+        if left_edge.a_2d.x <= point.x:
+            a.x = left_edge.a_2d.x + len_left
+        else:
+            a.x = left_edge.b_2d.x + len_left
+
+        x1 = abs(right_edge.a_2d.y - b.y)
+        x2 = abs(right_edge.b_2d.x - right_edge.a_2d.x)
+        x3 = abs(right_edge.a_2d.y - right_edge.b_2d.y)
+        len_right = (x1 * x2) / x3
+
+        if right_edge.a_2d.x >= point.x:
+            b.x = right_edge.a_2d.x - len_right
+        else:
+            b.x = right_edge.b_2d.x + len_right
+
+        print(
+            self._screen.point_to_screen_cords(a).get(), ',',
+            self._screen.point_to_screen_cords(b).get(),
+        )
+        self.draw_line(a, b)
 
     def render_environment(
             self,
@@ -103,9 +222,10 @@ class Camera:
 
         # It's normally normal to normalise the normal
         l = sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z)
-        normal.x /= l
-        normal.y /= l
-        normal.z /= l
+        if l != 0:
+            normal.x /= l
+            normal.y /= l
+            normal.z /= l
 
         return normal
 
@@ -113,33 +233,21 @@ class Camera:
             self,
             entity: Entity
     ):
-        faces_with_dot_product = []
+        temp_entity = copy.deepcopy(entity)
 
-        for face in entity.faces:
+        for face in temp_entity.faces:
             normal = self.get_face_normal(face)
-
-            dor_product = normal.x * (face.edges[0].a.x - self._position.x) + normal.y * (face.edges[0].a.y - self._position.y) + normal.z * (face.edges[0].a.z - self._position.z)
-            faces_with_dot_product.append({
-                'face': face,
-                'dot_product': dor_product
-            })
-
-        faces_with_dot_product = sorted(faces_with_dot_product, key=lambda d: d['dot_product'], reverse=True)
-
-        for face_with_dot_product in faces_with_dot_product:
-            face = face_with_dot_product['face']
-            dot_product = face_with_dot_product['dot_product']
-
+            dot_product = normal.x * (face.edges[0].a.x - self._position.x) + normal.y * (
+                    face.edges[0].a.y - self._position.y) + normal.z * (face.edges[0].a.z - self._position.z)
             if dot_product < 0.0:
-                color = entity.visible_lines_color
-            else:
-                color = entity.invisible_lines_color
+                for edge in face.edges:
+                    point_a_translated = self._multiply_matrix_vector(edge.a, self._mat_proj)
+                    point_b_translated = self._multiply_matrix_vector(edge.b, self._mat_proj)
 
-            for edge in face.edges:
-                self.render_line(
-                    edge.a,
-                    edge.b,
-                    color
-                )
+                    edge.a_2d = Point2D(point_a_translated.x, point_a_translated.y)
+                    edge.b_2d = Point2D(point_b_translated.x, point_b_translated.y)
 
+                self.draw_face(face)
 
+                for edge in face.edges:
+                    self.draw_line(edge.a_2d, edge.b_2d)
