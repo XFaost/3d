@@ -160,7 +160,7 @@ def run():
     # for i in get_dynamic_crosses():
     #     game.add_entity(i)
 
-    game.add_entity(Cube(Point3D(-1.75, -1, 1.0), 0.05, RED, BLUE))
+    game.add_entity(Cross(Point3D(-1.75, -1, 1.0), 0.05, RED, BLUE))
 
     game.run()
 

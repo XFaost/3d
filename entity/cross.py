@@ -22,20 +22,38 @@ class Cross(Entity):
         p10 = self.shift_point(2.0, 1.0, 0.0)
         p11 = self.shift_point(2.0, 0.0, 0.0)
 
-        return Face([
-            Edge(p0, p1),
-            Edge(p1, p2),
-            Edge(p2, p3),
-            Edge(p3, p4),
-            Edge(p4, p5),
-            Edge(p5, p6),
-            Edge(p6, p7),
-            Edge(p7, p8),
-            Edge(p8, p9),
-            Edge(p9, p10),
-            Edge(p10, p11),
-            Edge(p11, p0),
-        ])
+        return (
+            Face([
+                Edge(p0, p1),
+                Edge(p1, p10),
+                Edge(p10, p11),
+                Edge(p11, p0)
+            ]),
+            Face([
+                Edge(p1, p4),
+                Edge(p4, p7),
+                Edge(p7, p10),
+                Edge(p10, p1)
+            ]),
+            Face([
+                Edge(p4, p5),
+                Edge(p5, p6),
+                Edge(p6, p7),
+                Edge(p7, p4)
+            ]),
+            Face([
+                Edge(p2, p3),
+                Edge(p3, p4),
+                Edge(p4, p1),
+                Edge(p1, p2)
+            ]),
+            Face([
+                Edge(p10, p7),
+                Edge(p7, p8),
+                Edge(p8, p9),
+                Edge(p9, p10)
+            ]),
+        )
 
     def back_face(self):
         p0 = self.shift_point(2.0, 0.0, 1.0)
@@ -51,20 +69,38 @@ class Cross(Entity):
         p10 = self.shift_point(1.0, 1.0, 1.0)
         p11 = self.shift_point(1.0, 0.0, 1.0)
 
-        return Face([
-            Edge(p0, p1),
-            Edge(p1, p2),
-            Edge(p2, p3),
-            Edge(p3, p4),
-            Edge(p4, p5),
-            Edge(p5, p6),
-            Edge(p6, p7),
-            Edge(p7, p8),
-            Edge(p8, p9),
-            Edge(p9, p10),
-            Edge(p10, p11),
-            Edge(p11, p0),
-        ])
+        return (
+            Face([
+                Edge(p0, p1),
+                Edge(p1, p10),
+                Edge(p10, p11),
+                Edge(p11, p0)
+            ]),
+            Face([
+                Edge(p1, p4),
+                Edge(p4, p7),
+                Edge(p7, p10),
+                Edge(p10, p1)
+            ]),
+            Face([
+                Edge(p4, p5),
+                Edge(p5, p6),
+                Edge(p6, p7),
+                Edge(p7, p4)
+            ]),
+            Face([
+                Edge(p2, p3),
+                Edge(p3, p4),
+                Edge(p4, p1),
+                Edge(p1, p2)
+            ]),
+            Face([
+                Edge(p10, p7),
+                Edge(p7, p8),
+                Edge(p8, p9),
+                Edge(p9, p10)
+            ]),
+        )
 
     def left_face(self):
         p0 = self.shift_point(0.0, 1.0, 1.0)
@@ -242,8 +278,8 @@ class Cross(Entity):
         self.set_faces([
             self.top_face(),
             self.bottom_face(),
-            self.back_face(),
-            self.front_face(),
+            *self.back_face(),
+            *self.front_face(),
             self.left_face(),
             self.right_face(),
             self.left_top_face(),
