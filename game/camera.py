@@ -1,6 +1,6 @@
 import copy
 from math import tan, sqrt, cos, sin
-from typing import Optional
+from typing import Optional, List
 
 import numpy
 import pygame
@@ -120,22 +120,24 @@ class Camera:
 
         return cnt % 2 == 1
 
-    def get_pixel_color(self, point: Point2D):
-        cords = self._screen.point_to_screen_cords(point)
-        color = self._screen.screen.get_at(cords.get())[:3]
+    def get_pixel_color(self, x: int, y: int):
+        try:
+            color = self._screen.screen.get_at((x, y))[:3]
+        except IndexError:
+            raise
         return Color(*color)
 
     def draw_face(self, face: Face, color: Color, point: Optional[Point2D] = None):
-        print('==============')
+        # print('==============')
         if not point:
             x = (face.edges[0].a_2d.x + face.edges[1].a_2d.x + face.edges[1].b_2d.x) / 3
             y = (face.edges[0].a_2d.y + face.edges[1].a_2d.y + face.edges[1].b_2d.y) / 3
             point = Point2D(x, y)
 
-        for edge in face.edges:
-            print(self._screen.point_to_screen_cords(edge.a_2d).get(), end=',')
-        print('\n')
-        print(self._screen.point_to_screen_cords(point).get())
+        # for edge in face.edges:
+        #     print(self._screen.point_to_screen_cords(edge.a_2d).get(), end=',')
+        # print('\n')
+        # print(self._screen.point_to_screen_cords(point).get())
 
         a = Point2D(0, point.y)
         b = Point2D(0, point.y)
@@ -144,10 +146,10 @@ class Camera:
         right_edge = None
 
         for edge in face.edges:
-            print('edge',
-                  self._screen.point_to_screen_cords(edge.a_2d).get(), ',',
-                  self._screen.point_to_screen_cords(edge.b_2d).get()
-                  )
+            # print('edge',
+            #       self._screen.point_to_screen_cords(edge.a_2d).get(), ',',
+            #       self._screen.point_to_screen_cords(edge.b_2d).get()
+            #       )
             if all([
                 any([
                     edge.a_2d.x <= point.x,
@@ -170,17 +172,20 @@ class Camera:
         if not left_edge or not right_edge:
             raise Exception('point is not valid')
 
-        print(
-            self._screen.point_to_screen_cords(left_edge.a_2d).get(), ',',
-            self._screen.point_to_screen_cords(left_edge.b_2d).get(), ',',
-            self._screen.point_to_screen_cords(right_edge.a_2d).get(), ',',
-            self._screen.point_to_screen_cords(right_edge.b_2d).get()
-        )
+        # print(
+        #     self._screen.point_to_screen_cords(left_edge.a_2d).get(), ',',
+        #     self._screen.point_to_screen_cords(left_edge.b_2d).get(), ',',
+        #     self._screen.point_to_screen_cords(right_edge.a_2d).get(), ',',
+        #     self._screen.point_to_screen_cords(right_edge.b_2d).get()
+        # )
 
         x1 = abs(left_edge.a_2d.x - left_edge.b_2d.x)
         x2 = abs(a.y - left_edge.a_2d.y)
         x3 = abs(left_edge.b_2d.y - left_edge.a_2d.y)
-        len_left = ((x1) * (x2)) / (x3)
+        try:
+            len_left = ((x1) * (x2)) / (x3)
+        except ZeroDivisionError:
+            len_left = 0
 
         if left_edge.a_2d.x <= point.x:
             a.x = left_edge.a_2d.x + len_left
@@ -195,39 +200,49 @@ class Camera:
         if right_edge.a_2d.x >= point.x:
             b.x = right_edge.a_2d.x - len_right
         else:
-            b.x = right_edge.b_2d.x + len_right
+            b.x = right_edge.b_2d.x - len_right
 
-        print(
-            self._screen.point_to_screen_cords(a).get(), ',',
-            self._screen.point_to_screen_cords(b).get(),
-        )
+        # print(
+        #     self._screen.point_to_screen_cords(a).get(), ',',
+        #     self._screen.point_to_screen_cords(b).get(),
+        # )
         self.draw_line(a, b, color)
 
         # next_point = Point2D(point.x, point.y + 0.01)
         # if self.point_inside_face(face, next_point):
         #     self.draw_face(face, next_point)
 
-        step = 0.01
+        next_screen_cords = self._screen.point_to_screen_cords(a)
+        next_screen_cords.y -= 1
+        while next_screen_cords.x < self._screen.width and next_screen_cords.y < self._screen.height:
 
-        check_x = a.x
-        while True:
-            next_point = Point2D(check_x, point.y - step)
-            if check_x > b.x:
+            next_point = self._screen.screen_cords_to_point(next_screen_cords)
+            if next_point.x > b.x:
                 break
-            if self.point_inside_face(face, next_point) and self.get_pixel_color(next_point) != color:
+            if (
+                    self.point_inside_face(face, next_point)
+                    and self.get_pixel_color(next_screen_cords.x, next_screen_cords.y) != color
+            ):
                 self.draw_face(face, color, next_point)
                 break
-            check_x += step
 
-        check_x = a.x
-        while True:
-            next_point = Point2D(check_x, point.y + step)
-            if check_x > b.x:
+            next_screen_cords.x += 1
+
+        next_screen_cords = self._screen.point_to_screen_cords(a)
+        next_screen_cords.y += 1
+        while next_screen_cords.x < self._screen.width and next_screen_cords.y < self._screen.height:
+
+            next_point = self._screen.screen_cords_to_point(next_screen_cords)
+            if next_point.x > b.x:
                 break
-            if self.point_inside_face(face, next_point) and self.get_pixel_color(next_point) != color:
+            if (
+                    self.point_inside_face(face, next_point)
+                    and self.get_pixel_color(next_screen_cords.x, next_screen_cords.y) != color
+            ):
                 self.draw_face(face, color, next_point)
                 break
-            check_x += step
+
+            next_screen_cords.x += 1
 
     def render_environment(
             self,
@@ -267,7 +282,24 @@ class Camera:
     ):
         temp_entity = copy.deepcopy(entity)
 
-        for face in temp_entity.faces:
+        faces_with_dot_product = []
+
+        for face in entity.faces:
+            normal = self.get_face_normal(face)
+
+            dot_product = normal.x * (face.edges[0].a.x - self._position.x) + normal.y * (
+                        face.edges[0].a.y - self._position.y) + normal.z * (face.edges[0].a.z - self._position.z)
+            if dot_product < 0:
+                faces_with_dot_product.append({
+                    'face': face,
+                    'dot_product': dot_product
+                })
+
+        faces_with_dot_product = sorted(faces_with_dot_product, key=lambda d: d['dot_product'], reverse=True)
+
+        for face_with_dot_product in faces_with_dot_product:
+            face = face_with_dot_product['face']
+
             normal = self.get_face_normal(face)
             dot_product = normal.x * (face.edges[0].a.x - self._position.x) + normal.y * (
                     face.edges[0].a.y - self._position.y) + normal.z * (face.edges[0].a.z - self._position.z)

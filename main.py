@@ -138,8 +138,8 @@ def get_dynamic_crosses():
     return (
         DownwardCross(Point3D(-4.0, -5.0, 5.0), 0.3, RED, BLUE),
         LeftwardCross(Point3D(5.0, 4.0, 5.0), 0.3, RED, BLUE),
-        LeftDownwardCross(Point3D(5.0, -5.0, 5.0), 1, RED, BLUE),
-        EllipseCross(Point3D(2.5, -2.0, 5.0), 0.3, 3, 2, RED, BLUE)
+        #LeftDownwardCross(Point3D(5.0, -5.0, 5.0), 1, RED, BLUE),
+        #EllipseCross(Point3D(2.5, -2.0, 5.0), 0.3, 3, 2, RED, BLUE)
     )
 
 
@@ -160,7 +160,8 @@ def run():
     # for i in get_dynamic_crosses():
     #     game.add_entity(i)
 
-    game.add_entity(Cross(Point3D(-1.75, -1, 1.0), 0.05, RED, BLUE))
+    game.add_entity(Cross(Point3D(-1.75, 0.5, 1.0), 0.05, RED, BLUE))
+    game.add_entity(Cross(Point3D(-1.75, -0.5, 1.0), 0.05, RED, BLUE))
 
     game.run()
 
