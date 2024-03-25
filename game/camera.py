@@ -183,11 +183,11 @@ class Camera:
         x2 = abs(a.y - left_edge.a_2d.y)
         x3 = abs(left_edge.b_2d.y - left_edge.a_2d.y)
         try:
-            len_left = ((x1) * (x2)) / (x3)
+            len_left = (x1 * x2) / (x3)
         except ZeroDivisionError:
             len_left = 0
 
-        if left_edge.a_2d.x <= point.x:
+        if left_edge.a_2d.x <= left_edge.b_2d.x:
             a.x = left_edge.a_2d.x + len_left
         else:
             a.x = left_edge.a_2d.x - len_left
