@@ -10,4 +10,4 @@ class Point2D:
         return round(value, 4)
 
     def __repr__(self):
-        return f'{self.__round(self.x)}, {self.__round(self.y)}'
+        return f'({self.__round(self.x)}, {self.__round(self.y)})'

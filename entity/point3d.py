@@ -9,4 +9,4 @@ class Point3D:
         return round(value, 4)
 
     def __repr__(self):
-        return f'{self.__round(self.x)}, {self.__round(self.y)}, {self.__round(self.z)}'
+        return f'({self.__round(self.x)}, {self.__round(self.y)}, {self.__round(self.z)})'

@@ -160,8 +160,8 @@ def run():
     # for i in get_dynamic_crosses():
     #     game.add_entity(i)
 
-    game.add_entity(Cross(Point3D(-1.75, 0.5, 1.0), 0.05, RED, BLUE))
-    game.add_entity(Cross(Point3D(-1.75, -0.5, 1.0), 0.05, RED, BLUE))
+    game.add_entity(Cross(Point3D(-1.75, 0.5, 1.0), 0.1, RED, BLUE))
+    game.add_entity(Cross(Point3D(-1.75, -0.8, 1.0), 0.1, RED, BLUE))
 
     game.run()
 

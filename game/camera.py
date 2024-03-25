@@ -200,20 +200,16 @@ class Camera:
         except ZeroDivisionError:
             len_right = 0
 
-        if right_edge.a_2d.x >= point.x:
-            b.x = right_edge.a_2d.x - len_right
-        else:
+        if right_edge.a_2d.x <= right_edge.b_2d.x:
             b.x = right_edge.a_2d.x + len_right
+        else:
+            b.x = right_edge.b_2d.x + len_right
 
         # print(
         #     self._screen.point_to_screen_cords(a).get(), ',',
         #     self._screen.point_to_screen_cords(b).get(),
         # )
         self.draw_line(a, b, color)
-
-        # next_point = Point2D(point.x, point.y + 0.01)
-        # if self.point_inside_face(face, next_point):
-        #     self.draw_face(face, next_point)
 
         next_screen_cords = self._screen.point_to_screen_cords(a)
         next_screen_cords.y -= 1
