@@ -203,7 +203,7 @@ class Camera:
         if right_edge.a_2d.x <= right_edge.b_2d.x:
             b.x = right_edge.a_2d.x + len_right
         else:
-            b.x = right_edge.b_2d.x + len_right
+            b.x = right_edge.a_2d.x - len_right
 
         # print(
         #     self._screen.point_to_screen_cords(a).get(), ',',
