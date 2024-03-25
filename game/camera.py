@@ -4,6 +4,7 @@ from typing import Optional
 
 import numpy
 import pygame
+from pygame import Surface
 
 from entity.edge import Edge
 from entity.entity import Entity
@@ -119,7 +120,12 @@ class Camera:
 
         return cnt % 2 == 1
 
-    def draw_face(self, face: Face, point: Optional[Point2D] = None):
+    def get_pixel_color(self, point: Point2D):
+        cords = self._screen.point_to_screen_cords(point)
+        color = self._screen.screen.get_at(cords.get())[:3]
+        return Color(*color)
+
+    def draw_face(self, face: Face, color: Color, point: Optional[Point2D] = None):
         print('==============')
         if not point:
             x = (face.edges[0].a_2d.x + face.edges[1].a_2d.x + face.edges[1].b_2d.x) / 3
@@ -195,15 +201,33 @@ class Camera:
             self._screen.point_to_screen_cords(a).get(), ',',
             self._screen.point_to_screen_cords(b).get(),
         )
-        self.draw_line(a, b)
+        self.draw_line(a, b, color)
 
         # next_point = Point2D(point.x, point.y + 0.01)
         # if self.point_inside_face(face, next_point):
         #     self.draw_face(face, next_point)
 
-        next_point = Point2D(point.x, point.y - 0.001)
-        if self.point_inside_face(face, next_point):
-            self.draw_face(face, next_point)
+        step = 0.01
+
+        check_x = a.x
+        while True:
+            next_point = Point2D(check_x, point.y - step)
+            if check_x > b.x:
+                break
+            if self.point_inside_face(face, next_point) and self.get_pixel_color(next_point) != color:
+                self.draw_face(face, color, next_point)
+                break
+            check_x += step
+
+        check_x = a.x
+        while True:
+            next_point = Point2D(check_x, point.y + step)
+            if check_x > b.x:
+                break
+            if self.point_inside_face(face, next_point) and self.get_pixel_color(next_point) != color:
+                self.draw_face(face, color, next_point)
+                break
+            check_x += step
 
     def render_environment(
             self,
@@ -255,7 +279,7 @@ class Camera:
                     edge.a_2d = Point2D(point_a_translated.x, point_a_translated.y)
                     edge.b_2d = Point2D(point_b_translated.x, point_b_translated.y)
 
-                self.draw_face(face)
+                self.draw_face(face, RED)
 
                 for edge in face.edges:
                     self.draw_line(edge.a_2d, edge.b_2d, WHITE)

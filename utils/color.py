@@ -14,6 +14,14 @@ class Color:
     def get(self):
         return self._red, self._green, self._blue
 
+    def __eq__(self, other):
+        other_color = other.get()
+        return all([
+            self._red == other_color[0],
+            self._green == other_color[1],
+            self._blue == other_color[2],
+        ])
+
 
 BLACK = Color(0, 0, 0)
 WHITE = Color(255, 255, 255)
