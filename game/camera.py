@@ -190,17 +190,20 @@ class Camera:
         if left_edge.a_2d.x <= point.x:
             a.x = left_edge.a_2d.x + len_left
         else:
-            a.x = left_edge.b_2d.x + len_left
+            a.x = left_edge.a_2d.x - len_left
 
         x1 = abs(right_edge.a_2d.y - b.y)
         x2 = abs(right_edge.b_2d.x - right_edge.a_2d.x)
         x3 = abs(right_edge.a_2d.y - right_edge.b_2d.y)
-        len_right = (x1 * x2) / x3
+        try:
+            len_right = (x1 * x2) / x3
+        except ZeroDivisionError:
+            len_right = 0
 
         if right_edge.a_2d.x >= point.x:
             b.x = right_edge.a_2d.x - len_right
         else:
-            b.x = right_edge.b_2d.x - len_right
+            b.x = right_edge.a_2d.x + len_right
 
         # print(
         #     self._screen.point_to_screen_cords(a).get(), ',',
@@ -280,8 +283,6 @@ class Camera:
             self,
             entity: Entity
     ):
-        temp_entity = copy.deepcopy(entity)
-
         faces_with_dot_product = []
 
         for face in entity.faces:
